@@ -55,7 +55,7 @@ class Contacts extends Component {
   };
 
   searchFilterFunction = text => {
-    debugger;
+    // debugger;
     let result = this.state.lastData.filter(contact =>
       `${contact.name.first.toUpperCase()} ${contact.name.last.toUpperCase()}`.includes(
         text.toUpperCase()

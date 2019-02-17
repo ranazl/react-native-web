@@ -1,38 +1,5 @@
-import { SET_ITEMS, REMOVE_ITEMS, SET_ID,  FETCH_PRODUCTS_BEGIN,FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAILURE} from "./type";
-import {store} from '../page/App3'
+import { SET_ITEMS, REMOVE_ITEMS, SET_ID,} from "./type";
 
-
-export const fetchProducts =()=> {
-  return dispatch => {
-    dispatch(fetchProductsBegin());
-    return fetch("https://api.github.com/users")
-      // .then(handleErrors)
-      .then(res => res.json())
-      .then(json => {
-        dispatch(fetchProductsSuccess(json));
-      })
-      .catch(error => dispatch(fetchProductsFailure(error)));
-  };
-}
-
-const fetchProductsBegin = () => ({
-  type: FETCH_PRODUCTS_BEGIN
-});
-
-const fetchProductsSuccess = products => {
-    return {
-      type: FETCH_PRODUCTS_SUCCESS,
-      payload:  products 
-    }
-}
-
-
- const fetchProductsFailure = error => ({
-  type: FETCH_PRODUCTS_FAILURE,
-  payload:  error 
-});
-
-//ME
 
 const setItemsAction = input => {
   return {
@@ -42,10 +9,6 @@ const setItemsAction = input => {
 };
 
 export const setItems = (input) => {
-    // console.warn(input)
-    // return dispatch => {
-    //     dispatch(setTextAction(input));
-    // }
     return setItemsAction(input);
   };
 
@@ -63,7 +26,7 @@ export const setItems = (input) => {
       return setItemsRemove(index);
     };
 
-    const setItemsID = () => {
+ export   const setItemsID = () => {
       return {
         type: SET_ID,
        

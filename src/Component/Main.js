@@ -1,13 +1,42 @@
 import React, { Component } from 'react';
-import {chats} from '../chat/chats'
-import { View, Text, StyleSheet, TextInput, Image,TouchableOpacity,Animated,Easing,FlatList} from 'react-native-web';
+import {chats} from '../chat/chats';
+import { connect } from "react-redux";
+import {setDelete , setItems , setID} from '../service/action';
+
+import { View, Text, StyleSheet, TextInput, Image,TouchableOpacity,Animated,Easing,FlatList,TouchableHighlight} from 'react-native-web';
 
 class Main extends Component {
 
     constructor(props){
         super(props)
         this.animatedValue3 = new Animated.Value(0)
+        this.state={
+          text : '',
+      }
     }
+
+    pressButton=() =>{
+      this.props.setID()
+      console.log(this.state);
+      if(this.state.text.length > 0 ){
+      this.props.setItems(this.state.text)
+      this.setState({
+        text: ''
+    })
+    }
+  }
+
+    onTextChangeHandler =(input) =>{
+      this.setState({
+        text:input
+      })
+    }
+
+    Remover = (index) => {
+
+      this.props.setDelete(index)
+   
+    }    
 
     componentDidMount () {
         this.animate()
@@ -35,16 +64,6 @@ class Main extends Component {
             inputRange: [0, 1],
             outputRange: [-400, 10]
           })
-
-        //   const introButton2 = this.animatedValue3.interpolate({
-        //     inputRange: [0, 1],
-        //     outputRange: [-230, 15]
-        //   })
-
-        //   const introButton3 = this.animatedValue3.interpolate({
-        //     inputRange: [0, 1],
-        //     outputRange: [-250, 30]
-        //   })
 
         return (
             <View style={styles.container}>
@@ -82,48 +101,16 @@ class Main extends Component {
                     </View>
 
 <View style={{flex:8}}>
-                    <FlatList
-          data={chats}
-          keyExtractor={item => item.email}
-          renderItem={({ item }) => (
 
-            <View style={{marginTop:60}}>
+<FlatList
+          data={this.props.rana}
+          keyExtractor={item => item.id}
+          renderItem={({ item , index }) => <TouchableHighlight onPress={this.Remover.bind(this, index)}> 
+            <Text style={styles.iconChat}>{item.text}</Text> 
+            </TouchableHighlight>
+            }
+        />
 
-            <Animated.View style={item.sender === 'first' 
-             ? {justifyContent: 'flex-end',flexDirection:'row',transform:([{ translateY: introButton1 }]) } 
-            : {flexDirection:'row',justifyContent: 'flex-start',transform:([{ translateY: introButton1 }]) } } >
-            <View style={{justifyContent: 'flex-end',flexDirection: 'row',alignItems: 'center',}}>
-                     <Image
-                        source={item.image}
-                        style={styles.chatProfile}
-                     /> 
-                     <Text style={[styles.iconChat,{backgroundColor: item.sender === 'first' ? 'royalblue' : 'skyblue'}]}>
-                     {item.title}</Text>
-                     </View>
-            </Animated.View>
-
-            </View>
-            )}
-          />
-            {/* <Animated.View style={{justifyContent:'flex-end',flexDirection: 'row',marginVertical:40,marginRight: 25,}}>
-                     <Text style={[styles.iconChat,{marginRight:15,backgroundColor:'#65a8ea'}]}>{item.title}</Text>
-                     <Image
-                        source={item.image}
-                        style={styles.chatProfile}
-                     /> 
-                     
-            </Animated.View>
-            <Animated.View style={{flexDirection:'row',marginLeft: 25,}}>
-
-                     <Image
-                        source={item.image}
-                        style={styles.chatProfile}
-                     /> 
-                     <Text style={[styles.iconChat,{width:280,}]}>{item.title}</Text>
-            </Animated.View> */}
-
-
-       
         </View>
 
 
@@ -131,9 +118,11 @@ class Main extends Component {
                 <TextInput
                         style={{fontSize:10 ,paddingLeft:20,flex:1 }}
                         placeholder={"Type somthing to search..."}
-                        // onChangeText={this.searchFilterFunction.bind(this)}
+                        value={this.state.text}
+                        onSubmitEditing={this.pressButton.bind(this)}
+                        onChangeText={this.onTextChangeHandler.bind(this)}
                     />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.pressButton.bind(this)} >
                         <Image
                     source={require("../photos/arrow-up.png")}
                     style={styles.imagIcon}
@@ -190,18 +179,27 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30, 
         borderRadius: 50,
-        marginRight: 10 
+        marginLeft:15,
+        marginRight:10, 
       },
       iconChat:{
         width:190,
         minHeight:25,
-        backgroundColor:'#ecf6ff',
-        paddingLeft: 10,
+        backgroundColor:'skyblue',
+        marginLeft: 10,
         borderRadius:5,
-        paddingTop: 7,
+        marginTop: 20,
         justifyContent: 'center',
-        padding: 20,
+        padding:10,
+       flex:1
       }
 });
 
-export default Main;
+const mapStateToProps = state => {
+  return {
+    rana: state.items
+    // datas : state
+  };
+};
+
+export default connect(mapStateToProps,{setDelete,setItems,setID})(Main);
