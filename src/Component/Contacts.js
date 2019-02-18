@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import {setContact} from '../service/action';
+import {connect} from 'react-redux';
 import {
   FlatList,
   View,
@@ -11,21 +13,21 @@ import {
   Alert
 } from "react-native-web";
 
-class ContactDetail extends Component {
-  render() {
-    const { firstName, lastName, avatarUrl } = this.props;
+// class ContactDetail extends Component {
+//   render() {
+//     const { firstName, lastName, avatarUrl } = this.props;
 
-    return (
-      <TouchableHighlight underlayColor="rgba(0,0,0,.3)" onPress={() => {}}>
-        <View style={styles.list}>
-          <Image source={{ uri: avatarUrl }} style={styles.flatImage} />
-          <Text style={styles.flatText}>{firstName}</Text>
-          <Text style={styles.flatText}>{lastName}</Text>
-        </View>
-      </TouchableHighlight>
-    );
-  }
-}
+//     return (
+//       <TouchableHighlight underlayColor="rgba(0,0,0,.3)" onPress={() => { this.pressButton}}>
+//         <View style={styles.list}>
+//           <Image source={{ uri: avatarUrl }} style={styles.flatImage} />
+//           <Text style={styles.flatText}>{firstName}</Text>
+//           <Text style={styles.flatText}>{lastName}</Text>
+//         </View>
+//       </TouchableHighlight>
+//     );
+//   }
+// }
 
 class Contacts extends Component {
   constructor(props) {
@@ -37,6 +39,11 @@ class Contacts extends Component {
       loading: false
     };
   }
+
+  pressButton=(name) =>{
+    this.props.setContact (name)
+ 
+}
 
   componentDidMount() {
     this.fetchData();
@@ -98,11 +105,18 @@ class Contacts extends Component {
           ListHeaderComponent={this.search}
           keyExtractor={item => item.email}
           renderItem={({ item }) => (
-            <ContactDetail
-              firstName={item.name.first}
-              lastName={item.name.last}
-              avatarUrl={item.picture.large}
-            />
+            // <ContactDetail
+            //   firstName={item.name.first}
+            //   lastName={item.name.last}
+            //   avatarUrl={item.picture.large}
+            // />
+            <TouchableHighlight underlayColor="rgba(0,0,0,.3)" onPress={() => { this.pressButton (item.name.first + ' '+item.name.last )}}>
+            <View style={styles.list}>
+              <Image source={{ uri: item.picture.large }} style={styles.flatImage} />
+              <Text style={styles.flatText}>{item.name.first}</Text>
+              <Text style={styles.flatText}>{item.name.last}</Text>
+            </View>
+          </TouchableHighlight>
           )}
         />
       </View>
@@ -155,4 +169,5 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Contacts;
+
+export default connect(null, {setContact})(Contacts);

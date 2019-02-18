@@ -1,4 +1,4 @@
-import { SET_ITEMS, REMOVE_ITEMS, SET_ID,} from "./type";
+import { SET_ITEMS, REMOVE_ITEMS, SET_ID, SET_CONTACT,} from "./type";
 
 
 const setItemsAction = input => {
@@ -36,5 +36,16 @@ export const setItems = (input) => {
  
       return setItemsID();
     };
+//contact
+    const setItemsContact = (name) => {
+      return {
+        type: SET_CONTACT,
+        payload: name
+      };
+    };
+    
+    export const setContact = (name) => {
+        return setItemsContact(name);
+      };
 
 

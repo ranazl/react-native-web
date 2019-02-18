@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {chats} from '../chat/chats';
 import { connect } from "react-redux";
-import {setDelete , setItems , setID} from '../service/action';
+import {setDelete , setItems , setID , setContact } from '../service/action';
 
 import { View, Text, StyleSheet, TextInput, Image,TouchableOpacity,Animated,Easing,FlatList,TouchableHighlight} from 'react-native-web';
 
@@ -12,6 +12,7 @@ class Main extends Component {
         this.animatedValue3 = new Animated.Value(0)
         this.state={
           text : '',
+          blinker:true
       }
     }
 
@@ -39,7 +40,11 @@ class Main extends Component {
     }    
 
     componentDidMount () {
-        this.animate()
+        // this.animate(),
+        setInterval(
+          () => this.blinking(),
+          900
+        );
       }
       animate () {
         this.animatedValue3.setValue(0)
@@ -59,6 +64,8 @@ class Main extends Component {
         ]).start()
       }
 
+        blinking =() => {this.setState(prev=>({blinker:!prev.blinker}))}
+ 
     render() {
         const introButton1 = this.animatedValue3.interpolate({
             inputRange: [0, 1],
@@ -71,11 +78,12 @@ class Main extends Component {
             <View style={styles.header}>
 
                 <View style={{flex:1,flexDirection:'row',alignItems: 'center'}}>
-                    <Text style={{marginLeft:20}}>Marie Evans</Text>
-                    <Image
+                
+                    <Text style={{marginLeft:20}}>{this.props.contactName}</Text>
+                   { this.state.blinker && <Image
                          source={require("../photos/circle.png")}
                          style={styles.circle}
-                    />
+                    />}
                 </View>
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity>
@@ -106,7 +114,7 @@ class Main extends Component {
           data={this.props.rana}
           keyExtractor={item => item.id}
           renderItem={({ item , index }) => <TouchableHighlight onPress={this.Remover.bind(this, index)}> 
-            <Text style={styles.iconChat}>{item.text}</Text> 
+            <Text style={styles.iconChat} onPress={this.props.setContact()}>{item.text}</Text> 
             </TouchableHighlight>
             }
         />
@@ -197,9 +205,10 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    rana: state.items
+    rana: state.items,
+    contactName:state.name
     // datas : state
   };
 };
 
-export default connect(mapStateToProps,{setDelete,setItems,setID})(Main);
+export default connect(mapStateToProps,{setDelete,setItems,setID,setContact})(Main);

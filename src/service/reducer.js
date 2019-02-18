@@ -1,8 +1,9 @@
-import { SET_ITEMS,REMOVE_ITEMS, SET_ID,} from "./type";
+import { SET_ITEMS,REMOVE_ITEMS, SET_ID, SET_CONTACT,} from "./type";
 
 const initialState = {
   id:0,
-  items: []
+  items: [],
+  name:''
 };
 
 
@@ -20,13 +21,22 @@ function reducer(state = initialState, action) {
         ...state,
         id:state.id +1
       };
+
       case REMOVE_ITEMS:
       return{  
         ...state,
        items : [...state.items.slice(0,action.payload), ...state.items.slice(action.payload +1)]
   
       };
-      
+     
+      //contact
+
+      case SET_CONTACT:
+      return{
+        ...state,
+        name:(action.payload)
+      }
+
     default:
       return state;
   }
