@@ -1,46 +1,79 @@
-import { SET_ITEMS,REMOVE_ITEMS, SET_ID, SET_CONTACT,} from "./type";
+import { SET_ITEMS,REMOVE_ITEMS, SET_ID,SET_CONTACT,SET_CHANGE_COLOR,SET_ANIMATION,} from "./type";
 
 const initialState = {
-  id:0,
+  id: 0,
   items: [],
-  name:''
+  name: "",
+  color: false
+  // anim:''
 };
-
 
 function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_ITEMS:
       return {
         ...state,
-        items: [...state.items, {'text' :action.payload , 'id' :state.id}]
+        items: [...state.items, { text: action.payload, id: state.id }]
       };
-//REMOVE
+    //REMOVE
 
-      case SET_ID:
+    case SET_ID:
       return {
         ...state,
-        id:state.id +1
+        id: state.id + 1
       };
 
-      case REMOVE_ITEMS:
-      return{  
+    case REMOVE_ITEMS:
+      return {
         ...state,
-       items : [...state.items.slice(0,action.payload), ...state.items.slice(action.payload +1)]
+        items: [
+          ...state.items.slice(0, action.payload),
+          ...state.items.slice(action.payload + 1)
+        ]
+      };
+
+    //contact
+
+    case SET_CONTACT:
+      return {
+        ...state,
+        name: action.payload
+      };
+
+    //changeColor
+
+    case SET_CHANGE_COLOR:
+      return {
+        ...state,
+        color: !state.color
+      };
+
+      //fetch
+//       case FETCH_PRODUCTS_BEGIN:
+//       return {
+//           ...state,
+//           loading: true,
+//           error: null
+//       };
+
+// case FETCH_PRODUCTS_SUCCESS:
+// return {
   
-      };
-     
-      //contact
+//   ...state,
+//   loading: false,
+//   items: action.payload
+// };
 
-      case SET_CONTACT:
-      return{
-        ...state,
-        name:(action.payload)
-      }
-
+// case FETCH_PRODUCTS_FAILURE:
+// return {
+//   ...state,
+//   loading: false,
+//   error: action.payload,
+//   items: []
+// };
     default:
       return state;
   }
 }
 
 export default reducer;
-

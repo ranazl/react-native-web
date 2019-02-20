@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {chats} from '../chat/chats';
 import { connect } from "react-redux";
-import {setDelete , setItems , setID , setContact } from '../service/action';
+import {setDelete , setItems , setID , setContact ,  setchangeColor} from '../service/action';
 
 import { View, Text, StyleSheet, TextInput, Image,TouchableOpacity,Animated,Easing,FlatList,TouchableHighlight} from 'react-native-web';
 
@@ -9,10 +9,14 @@ class Main extends Component {
 
     constructor(props){
         super(props)
+        this.spinValue=new Animated.Value(0)
+        this.springValue=new Animated.Value(0.4)
         this.animatedValue3 = new Animated.Value(0)
         this.state={
           text : '',
-          blinker:true
+          blinker:true,
+          chengi:true
+          // changeColor:false
       }
     }
 
@@ -33,6 +37,10 @@ class Main extends Component {
       })
     }
 
+    changeColor=() =>{
+      this.setState({changeColor: !this.state.changeColor})
+    }
+
     Remover = (index) => {
 
       this.props.setDelete(index)
@@ -40,12 +48,36 @@ class Main extends Component {
     }    
 
     componentDidMount () {
-        // this.animate(),
+        this.spin()
         setInterval(
           () => this.blinking(),
           900
         );
       }
+
+      spin() {
+        this.spinValue.setValue(0)
+        Animated.timing(
+          this.spinValue,{
+            toValue:1,
+            duration:3000,
+            easing:Easing.linear
+          }
+        ).start(() => this.spin())
+      }
+
+      spring() {
+        this.springValue.setValue(0)
+        Animated.spring(
+          this.springValue,{
+            toValue:1,
+            friction:1
+            // duration:3000,
+            // easing:Easing.linear
+          }
+        ).start()
+      }
+
       animate () {
         this.animatedValue3.setValue(0)
         const createAnimation = function (value, duration, easing, delay = 0) {
@@ -64,6 +96,10 @@ class Main extends Component {
         ]).start()
       }
 
+      Button=() =>{
+        this.setState({chengi: !this.state.chengi})
+      }
+
         blinking =() => {this.setState(prev=>({blinker:!prev.blinker}))}
  
     render() {
@@ -72,10 +108,20 @@ class Main extends Component {
             outputRange: [-400, 10]
           })
 
+          const spin = this.spinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg','360deg']
+          })
+
         return (
-            <View style={styles.container}>
-            
+         
+              <View style={[styles.container, this.props.change && {backgroundColor: '#fff1fd'}]}>
+              
+            {
+              console.log(this.state.chengi)
+            }
             <View style={styles.header}>
+            {/* <View style={{backgroundColor:this.props.change , width : 30 , height : 30}}></View> */}
 
                 <View style={{flex:1,flexDirection:'row',alignItems: 'center'}}>
                 
@@ -94,9 +140,9 @@ class Main extends Component {
                         </TouchableOpacity>
                     
                         <TouchableOpacity>
-                            <Image
+                            <Animated.Image
                                 source={require("../photos/phone.png")}
-                                 style={{ width: 15, height: 15,marginLeft: 20, marginRight:32 }}
+                                 style={{ width: 15, height: 15,marginLeft: 20, marginRight:32, transform:[{rotate:spin}] }}
                              />
                         </TouchableOpacity>
                          <TouchableOpacity>
@@ -122,7 +168,10 @@ class Main extends Component {
         </View>
 
 
-                <View style={styles.search}>
+                <View style={this.state.chengi && styles.search || styles.bcred}>
+                
+                
+                
                 <TextInput
                         style={{fontSize:10 ,paddingLeft:20,flex:1 }}
                         placeholder={"Type somthing to search..."}
@@ -136,16 +185,16 @@ class Main extends Component {
                     style={styles.imagIcon}
                     />
                     </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.Button.bind(this)}>
                             <Image
                     source={require("../photos/attachment.png")}
                     style={[styles.imagIcon,{marginHorizontal:10,}]}
                     />
                         </TouchableOpacity>
                 <TouchableOpacity>
-                    <Image
+                    <Animated.Image
                     source={require("../photos/smile.png")}
-                    style={[styles.imagIcon,{marginHorizontal:10,}]}
+                    style={[styles.imagIcon,{marginHorizontal:10,transform:[{scale:this.spinValue}]}]}
                      />
                 </TouchableOpacity>
                 </View> 
@@ -166,10 +215,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 30,
       },
+      ch: {
+        flex:6,
+   
+        backgroundColor: "red",
+    
+      },
       header: { 
           flex:1,
           flexDirection: 'row',
           backgroundColor: "white",
+          
           alignItems: "center",
       },
       imagIcon:{
@@ -200,15 +256,25 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding:10,
        flex:1
+      },
+      changeC:{
+        backgroundColor:'#fad6fb'
+      },
+      bcred:{
+        backgroundColor:'#4fc4c8',
+        flex:1,
+        flexDirection: 'row',
+        alignItems: "center",
+        marginTop: 30,
       }
 });
 
 const mapStateToProps = state => {
   return {
     rana: state.items,
-    contactName:state.name
-    // datas : state
+    contactName:state.name,
+    change : state.color,
   };
 };
 
-export default connect(mapStateToProps,{setDelete,setItems,setID,setContact})(Main);
+export default connect(mapStateToProps,{setDelete,setItems,setID,setContact,setchangeColor})(Main);

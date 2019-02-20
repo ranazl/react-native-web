@@ -10,7 +10,11 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
-  Alert
+  Alert,
+  LayoutAnimation,
+  UIManager,
+  Animated,
+  Easing
 } from "react-native-web";
 
 // class ContactDetail extends Component {
@@ -29,15 +33,42 @@ import {
 //   }
 // }
 
+UIManager.setLayoutAnimationEnabledExperimental &&
+UIManager.setLayoutAnimationEnabledExperimental(true);
+
 class Contacts extends Component {
+
+
+
   constructor(props) {
     super(props);
     this.state = {
       filter: [],
       filteredData: [],
       lastData: [],
-      loading: false
+      loading: false,
+      fadeIn: new Animated.Value(0),
+      // toggle:false,
+      // width:new Animated.Value(0)
+      // animatedValue = new Animated.Value(0)
     };
+  }
+
+  animate () {
+    this.animatedValue.setValue(0)
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: 45,
+        duration: 1000,
+        easing: Easing.linear
+      }
+    ).start(() => this.animate())
+  }
+
+  changeButton=() =>{
+    // LayoutAnimation.configureNext(this.config);
+    this.setState({toggle: !this.state.toggle})
   }
 
   pressButton=(name) =>{
@@ -47,6 +78,7 @@ class Contacts extends Component {
 
   componentDidMount() {
     this.fetchData();
+    this.fadeIn();
   }
 
   fetchData = () => {
@@ -73,10 +105,32 @@ class Contacts extends Component {
     });
   };
 
+
+  getContacts = () => {
+    return this.state.filteredData.length > 0
+      ? this.state.filteredData
+      : this.state.filter;
+  };
+
+  fadeIn = () => {
+    Animated.timing(
+        this.state.fadeIn,
+        {
+            toValue: 1,
+            duration: 1000,
+            // easing: Easing.back(),
+            // useNativeDriver: true
+        }
+    ).start()
+    
+};
+
+ 
   search = () => {
+    
     return (
-      <View style={styles.hedaerFlatList}>
-        <View style={styles.main}>
+      <Animated.View style={styles.hedaerFlatList}>
+        <View style={[styles.main , {opacity: this.state.fadeIn,}]}>
           <Image
             source={require("../photos/search.png")}
             style={{ width: 13, height: 13, marginRight: 10 }}
@@ -87,7 +141,7 @@ class Contacts extends Component {
             onChangeText={this.searchFilterFunction.bind(this)}
           />
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -98,6 +152,7 @@ class Contacts extends Component {
   };
 
   render() {
+    let { fadeIn } = this.state;
     return (
       <View style={styles.container}>
         <FlatList
@@ -119,7 +174,7 @@ class Contacts extends Component {
           </TouchableHighlight>
           )}
         />
-      </View>
+</View>
     );
   }
 }
@@ -162,10 +217,33 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 30,
     height: 30
-  },
+},
   main: {
     marginLeft: 50,
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    // fontSize: textSize,
+    // marginTop: 10,
+  },
+
+  buttonOn: {
+    backgroundColor: "#dce2e8",
+    justifyContent: "center",
+    alignContent: "center",
+    marginHorizontal: 20,
+    padding: 10,
+    marginVertical: 30,
+    height: 30
+  },
+
+  buttonOff: {
+    width: Animated,
+    height: 45,
+    backgroundColor: "#dce2e8",
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
 

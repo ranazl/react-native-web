@@ -1,8 +1,31 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,Image,TouchableOpacity } from 'react-native-web';
+import {connect} from 'react-redux';
+import {setchangeColor} from '../service/action';
 
 class Icons extends Component {
+    
+constructor(props){
+    super(props)
+
+    this.state={
+        changeColor:false
+    }
+}
+
+changeColor = () => {
+    
+   this.props.setchangeColor()
+   console.log('change')
+}
+
+// changeColor=() =>{
+//     this.setState({changeColor: !this.state.changeColor});
+//   }
     render() {
+
+       
+
         return (
             <View style={styles.container}>
                 <View>
@@ -10,7 +33,7 @@ class Icons extends Component {
                 </View>
                 <View style={{marginTop:30,}}>
                <TouchableOpacity><Image source={require('../photos/comment.png')} style={styles.icon}/></TouchableOpacity>  
-               <TouchableOpacity><Image source={require('../photos/like.png')} style={styles.icon}/></TouchableOpacity>  
+               <TouchableOpacity onPress={this.changeColor.bind(this)}><Image source={require('../photos/like.png')} style={styles.icon}/></TouchableOpacity>  
                 <TouchableOpacity><Image source={require('../photos/video.png')} style={styles.icon}/></TouchableOpacity>  
                 <TouchableOpacity><Image source={require('../photos/email.png')} style={styles.icon}/></TouchableOpacity>  
                 <TouchableOpacity><Image source={require('../photos/setting.png')} style={styles.icon}/></TouchableOpacity>  
@@ -46,4 +69,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Icons;
+export default connect(null, {setchangeColor})(Icons);

@@ -9,7 +9,9 @@ import Contacts from './Component/Contacts';
 import Main from './Component/Main';
 import reducer from '../src/service/reducer';
 
-export const store = createStore(reducer)
+
+export const store = createStore(reducer,);
+
 
 export default class App extends Component{
   render() {
