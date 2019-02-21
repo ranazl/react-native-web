@@ -1,9 +1,21 @@
-import { SET_ITEMS,REMOVE_ITEMS, SET_ID,SET_CONTACT,SET_CHANGE_COLOR,SET_ANIMATION, FETCH_PRODUCTS_BEGIN,FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAILURE} from "./type";
+import {
+  SET_ITEMS,
+  REMOVE_ITEMS,
+  SET_ID,
+  SET_CONTACT,
+  SET_CHANGE_COLOR,
+  SET_ANIMATION,
+  FETCH_PRODUCTS_BEGIN,
+  FETCH_PRODUCTS_SUCCESS,
+  FETCH_PRODUCTS_FAILURE,
+  SEARCH_ITEM
+} from "./type";
 
 const initialState = {
+  result : [] ,
   id: 0,
   items: [],
-  contacts : [],
+  contacts: [],
   name: "",
   color: false
   // anim:''
@@ -49,29 +61,41 @@ function reducer(state = initialState, action) {
         color: !state.color
       };
 
-      //fetch
-      case FETCH_PRODUCTS_BEGIN:
+    //fetch
+    case FETCH_PRODUCTS_BEGIN:
       return {
-          ...state,
-          loading: true,
-          error: null
+        ...state,
+        loading: true,
+        error: null
       };
 
-case FETCH_PRODUCTS_SUCCESS:
-return {
-  
-  ...state,
-  loading: false,
-  contacts: action.payload
-};
+    case FETCH_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        contacts: action.payload,
+        result: action.payload
+      };
 
-case FETCH_PRODUCTS_FAILURE:
-return {
-  ...state,
-  loading: false,
-  error: action.payload,
-  contacts: []
-};
+    case FETCH_PRODUCTS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        contacts: [],
+        result: []
+      };
+
+    //Search
+    case SEARCH_ITEM:
+      let filteredData = state.items.filter(gholi =>
+        gholi.login.toUpperCase().includes(action.payload.toUpperCase())
+      );
+      return {
+        ...state,
+        result: [...filteredData]
+      };
+
     default:
       return state;
   }

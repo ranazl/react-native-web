@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {setContact , fetchProducts} from '../service/action';
+import {setContact , fetchProducts , setSearch} from '../service/action';
 import {connect} from 'react-redux';
 import {
   FlatList,
@@ -43,6 +43,7 @@ class Contacts extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      text:'',
       // filter: [],
       // filteredData: [],
       // lastData: [],
@@ -81,19 +82,10 @@ class Contacts extends Component {
     this.fadeIn();
   }
 
-  // fetchData = () => {
-  //   let lastData = this.state.lastData;
-  //   fetch("https://randomuser.me/api/?results=20")
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       this.setState(
-  //         { lastData: [...lastData, ...data.results], loading: true },
-  //         () => this.setState({ filter: this.state.lastData })
-  //       );
-  //     });
-  // };
-
-  // searchFilterFunction = text => {
+  searchFilterFunction = text => {
+    this.props.setSearch (text)
+  }
+  // searchFilterFunction = (text) => {
   //   // debugger;
   //   let result = this.state.lastData.filter(contact =>
   //     `${contact.name.first.toUpperCase()} ${contact.name.last.toUpperCase()}`.includes(
@@ -138,7 +130,7 @@ class Contacts extends Component {
           <TextInput
             placeholder={"Search"}
             style={{ fontSize: 12, color: "#98999a" }}
-            // onChangeText={this.searchFilterFunction.bind(this)}
+             onChangeText={this.searchFilterFunction.bind(this)}
           />
         </View>
       </Animated.View>
@@ -156,7 +148,7 @@ class Contacts extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.props.items}
+          data={this.props.result}
           ListHeaderComponent={this.search}
           keyExtractor={item => item.login}
           renderItem={({ item }) => (
@@ -251,6 +243,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
 return{
   items:state.contacts,
+  result: state.result,
     // products: state.products.items,
     // loading: state.products.loading,
     // error: state.products.error
@@ -259,4 +252,4 @@ return{
 }
 
 
-export default connect(mapStateToProps, {setContact , fetchProducts})(Contacts);
+export default connect(mapStateToProps, {setContact , fetchProducts , setSearch})(Contacts);
