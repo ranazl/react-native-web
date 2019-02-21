@@ -115,7 +115,7 @@ class Main extends Component {
 
         return (
          
-              <View style={[styles.container, this.props.change && {backgroundColor: '#fff1fd'}]}>
+              <View style={[styles.container, this.props.change && {backgroundColor: '#f5b7b1'}]}>
               
             {
               console.log(this.state.chengi)

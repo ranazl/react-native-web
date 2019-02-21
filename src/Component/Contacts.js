@@ -72,7 +72,6 @@ class Contacts extends Component {
   // }
 
   pressButton=(name) =>{
-    console.log ('innnnnnnnnnnnnnjaaa1' + name)
     this.props.setContact (name)
  
 }
@@ -199,9 +198,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30
   },
   flatImage: {
-    width: 30,
+    width: 35,
     height: 35,
-    borderRadius: 50
+    borderRadius:100
   },
   flatText: {
     color: "black",
