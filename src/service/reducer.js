@@ -1,8 +1,9 @@
-import { SET_ITEMS,REMOVE_ITEMS, SET_ID,SET_CONTACT,SET_CHANGE_COLOR,SET_ANIMATION,} from "./type";
+import { SET_ITEMS,REMOVE_ITEMS, SET_ID,SET_CONTACT,SET_CHANGE_COLOR,SET_ANIMATION, FETCH_PRODUCTS_BEGIN,FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAILURE} from "./type";
 
 const initialState = {
   id: 0,
   items: [],
+  contacts : [],
   name: "",
   color: false
   // anim:''
@@ -49,28 +50,28 @@ function reducer(state = initialState, action) {
       };
 
       //fetch
-//       case FETCH_PRODUCTS_BEGIN:
-//       return {
-//           ...state,
-//           loading: true,
-//           error: null
-//       };
+      case FETCH_PRODUCTS_BEGIN:
+      return {
+          ...state,
+          loading: true,
+          error: null
+      };
 
-// case FETCH_PRODUCTS_SUCCESS:
-// return {
+case FETCH_PRODUCTS_SUCCESS:
+return {
   
-//   ...state,
-//   loading: false,
-//   items: action.payload
-// };
+  ...state,
+  loading: false,
+  contacts: action.payload
+};
 
-// case FETCH_PRODUCTS_FAILURE:
-// return {
-//   ...state,
-//   loading: false,
-//   error: action.payload,
-//   items: []
-// };
+case FETCH_PRODUCTS_FAILURE:
+return {
+  ...state,
+  loading: false,
+  error: action.payload,
+  contacts: []
+};
     default:
       return state;
   }

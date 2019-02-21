@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {setContact} from '../service/action';
+import {setContact , fetchProducts} from '../service/action';
 import {connect} from 'react-redux';
 import {
   FlatList,
@@ -43,17 +43,17 @@ class Contacts extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: [],
-      filteredData: [],
-      lastData: [],
-      loading: false,
+      // filter: [],
+      // filteredData: [],
+      // lastData: [],
+      // loading: false,
       fadeIn: new Animated.Value(0),
       // toggle:false,
       // width:new Animated.Value(0)
       // animatedValue = new Animated.Value(0)
     };
   }
-
+  
   animate () {
     this.animatedValue.setValue(0)
     Animated.timing(
@@ -66,51 +66,52 @@ class Contacts extends Component {
     ).start(() => this.animate())
   }
 
-  changeButton=() =>{
-    // LayoutAnimation.configureNext(this.config);
-    this.setState({toggle: !this.state.toggle})
-  }
+  // changeButton=() =>{
+  //   // LayoutAnimation.configureNext(this.config);
+  //   this.setState({toggle: !this.state.toggle})
+  // }
 
   pressButton=(name) =>{
+    console.log ('innnnnnnnnnnnnnjaaa1' + name)
     this.props.setContact (name)
  
 }
 
   componentDidMount() {
-    this.fetchData();
+    this.props.fetchProducts();
     this.fadeIn();
   }
 
-  fetchData = () => {
-    let lastData = this.state.lastData;
-    fetch("https://randomuser.me/api/?results=20")
-      .then(response => response.json())
-      .then(data => {
-        this.setState(
-          { lastData: [...lastData, ...data.results], loading: true },
-          () => this.setState({ filter: this.state.lastData })
-        );
-      });
-  };
+  // fetchData = () => {
+  //   let lastData = this.state.lastData;
+  //   fetch("https://randomuser.me/api/?results=20")
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       this.setState(
+  //         { lastData: [...lastData, ...data.results], loading: true },
+  //         () => this.setState({ filter: this.state.lastData })
+  //       );
+  //     });
+  // };
 
-  searchFilterFunction = text => {
-    // debugger;
-    let result = this.state.lastData.filter(contact =>
-      `${contact.name.first.toUpperCase()} ${contact.name.last.toUpperCase()}`.includes(
-        text.toUpperCase()
-      )
-    );
-    this.setState({
-      filteredData: result
-    });
-  };
+  // searchFilterFunction = text => {
+  //   // debugger;
+  //   let result = this.state.lastData.filter(contact =>
+  //     `${contact.name.first.toUpperCase()} ${contact.name.last.toUpperCase()}`.includes(
+  //       text.toUpperCase()
+  //     )
+  //   );
+  //   this.setState({
+  //     filteredData: result
+  //   });
+  // };
 
 
-  getContacts = () => {
-    return this.state.filteredData.length > 0
-      ? this.state.filteredData
-      : this.state.filter;
-  };
+  // getContacts = () => {
+  //   return this.state.filteredData.length > 0
+  //     ? this.state.filteredData
+  //     : this.state.filter;
+  // };
 
   fadeIn = () => {
     Animated.timing(
@@ -138,40 +139,41 @@ class Contacts extends Component {
           <TextInput
             placeholder={"Search"}
             style={{ fontSize: 12, color: "#98999a" }}
-            onChangeText={this.searchFilterFunction.bind(this)}
+            // onChangeText={this.searchFilterFunction.bind(this)}
           />
         </View>
       </Animated.View>
     );
   };
 
-  getContacts = () => {
-    return this.state.filteredData.length > 0
-      ? this.state.filteredData
-      : this.state.filter;
-  };
+  // getContacts = () => {
+  //   return this.state.filteredData.length > 0
+  //     ? this.state.filteredData
+  //     : this.state.filter;
+  // };
 
   render() {
     let { fadeIn } = this.state;
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.getContacts()}
+          data={this.props.items}
           ListHeaderComponent={this.search}
-          keyExtractor={item => item.email}
+          keyExtractor={item => item.login}
           renderItem={({ item }) => (
             // <ContactDetail
-            //   firstName={item.name.first}
+            //   firstName={item.name.first} 
             //   lastName={item.name.last}
             //   avatarUrl={item.picture.large}
             // />
-            <TouchableHighlight underlayColor="rgba(0,0,0,.3)" onPress={() => { this.pressButton (item.name.first + ' '+item.name.last )}}>
+            <TouchableHighlight underlayColor="rgba(0,0,0,.3)" onPress={() => { this.pressButton (item.login )}}>
             <View style={styles.list}>
-              <Image source={{ uri: item.picture.large }} style={styles.flatImage} />
-              <Text style={styles.flatText}>{item.name.first}</Text>
-              <Text style={styles.flatText}>{item.name.last}</Text>
+              <Image source={{ uri: item.avatar_url }} style={styles.flatImage} />
+              <Text style={styles.flatText}>{item.login}</Text>
+              <Text style={styles.flatText}>{item.login}</Text>
+              {/* <Text style={styles.flatText}>{item.name.last}</Text> */}
             </View>
-          </TouchableHighlight>
+           </TouchableHighlight>
           )}
         />
 </View>
@@ -247,5 +249,15 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = state => {
+return{
+  items:state.contacts,
+    // products: state.products.items,
+    // loading: state.products.loading,
+    // error: state.products.error
+}
 
-export default connect(null, {setContact})(Contacts);
+}
+
+
+export default connect(mapStateToProps, {setContact , fetchProducts})(Contacts);
