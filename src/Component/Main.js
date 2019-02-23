@@ -22,7 +22,7 @@ class Main extends Component {
 
     pressButton=() =>{
       this.props.setID()
-      console.log(this.state);
+     
       if(this.state.text.length > 0 ){
       this.props.setItems(this.state.text)
       this.setState({
@@ -118,7 +118,7 @@ class Main extends Component {
               <View style={[styles.container, this.props.change && {backgroundColor: '#f5b7b1'}]}>
               
             {
-              console.log(this.state.chengi)
+             
             }
             <View style={styles.header}>
             {/* <View style={{backgroundColor:this.props.change , width : 30 , height : 30}}></View> */}

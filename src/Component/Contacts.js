@@ -62,7 +62,8 @@ class Contacts extends Component {
       {
         toValue: 45,
         duration: 1000,
-        easing: Easing.linear
+        easing: Easing.linear,
+        useNativeDriver: true,
       }
     ).start(() => this.animate())
   }
@@ -85,6 +86,13 @@ class Contacts extends Component {
   searchFilterFunction = text => {
     this.props.setSearch (text)
   }
+
+//   setText = text  => {
+//     this.setState ({
+//         text : text
+//     })
+// };
+
   // searchFilterFunction = (text) => {
   //   // debugger;
   //   let result = this.state.lastData.filter(contact =>
@@ -130,6 +138,7 @@ class Contacts extends Component {
           <TextInput
             placeholder={"Search"}
             style={{ fontSize: 12, color: "#98999a" }}
+            // onPress={()=>this.props.setSearch(this.state.text)}
              onChangeText={this.searchFilterFunction.bind(this)}
           />
         </View>
@@ -145,6 +154,7 @@ class Contacts extends Component {
 
   render() {
     let { fadeIn } = this.state;
+
     return (
       <View style={styles.container}>
         <FlatList
@@ -178,7 +188,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#ecf6ff",
-    // height:300
+    // height:300,
+    marginLeft:-20
   },
   list: {
     flex: 1,
@@ -242,8 +253,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
 return{
-  items:state.contacts,
+  items:state.Contacts,
   result: state.result,
+  filteredData: state.filteredData,
     // products: state.products.items,
     // loading: state.products.loading,
     // error: state.products.error

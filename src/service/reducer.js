@@ -17,7 +17,9 @@ const initialState = {
   items: [],
   contacts: [],
   name: "",
-  color: false
+  color: false,
+  filter: [],
+  filteredData: [],
   // anim:''
 };
 
@@ -74,7 +76,8 @@ function reducer(state = initialState, action) {
         ...state,
         loading: false,
         contacts: action.payload,
-        result: action.payload
+        result: action.payload,
+        filteredData:action.payload
       };
 
     case FETCH_PRODUCTS_FAILURE:
@@ -88,12 +91,12 @@ function reducer(state = initialState, action) {
 
     //Search
     case SEARCH_ITEM:
-      let filteredData = state.items.filter(gholi =>
-        gholi.login.toUpperCase().includes(action.payload.toUpperCase())
+      let searchFilterFunction = state.filteredData.filter(contact =>
+        contact.login.toUpperCase().includes(action.payload.toUpperCase())
       );
       return {
         ...state,
-        result: [...filteredData]
+        result: [...searchFilterFunction]
       };
 
     default:
